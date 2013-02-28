@@ -21,11 +21,13 @@ typedef void * (*method_simple)(void *,void *);
 #include <libxml/tree.h>
 #include <libxslt/transform.h>
 #include <libxslt/xsltutils.h>
+#include  <db.h>
 #include "threadpool.h"
 #include "xmlutils.h"
 #include  "unit_test.h"
+#include "dbcache.h"
 //#include "bson.h"
-#include  <db.h>
+
 
 
 

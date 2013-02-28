@@ -18,5 +18,8 @@ typedef struct xslt_class{
 
 xslt_class* xslt_class_new();
 
+void xslt_class_unit_stress_test();
+
+void xslt_class_unit_test();
 
 #endif /* XMLUTILS_H_ */
