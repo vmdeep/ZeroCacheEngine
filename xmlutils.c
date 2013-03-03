@@ -35,16 +35,30 @@ static void xslt_class_compile_style(void * this, char * style){
 	((xslt_class*)this)->stylesheet = cur;
 }
 
+static void xslt_class_compile_style_file(void * this, char * styleFile){
+	xsltStylesheetPtr cur = xsltParseStylesheetFile((const xmlChar *)styleFile);
+	((xslt_class*)this)->stylesheet = cur;
+}
+
 static xmlChar * xslt_class_transform(void * this, char * xml){
 	 xmlDocPtr doc, res;
 			xmlChar *output;
 			int len = 0 ;
 			doc = xmlParseDoc(xml);
-			char *params[16 + 1];
-			params[0] = "test";
-			params[1] = "123";
-			params[2] = NULL;
-			res = xsltApplyStylesheet(((xslt_class*)this)->stylesheet, doc, params);
+			res = xsltApplyStylesheet(((xslt_class*)this)->stylesheet, doc, ((xslt_class*)this)->params);
+			xsltSaveResultToString(&output, &len, res, ((xslt_class*)this)->stylesheet);
+
+			xmlFreeDoc(res);
+			xmlFreeDoc(doc);
+			return output;
+}
+
+static xmlChar * xslt_class_transform_file(void * this, char * xmlFile){
+	 xmlDocPtr doc, res;
+			xmlChar *output;
+			int len = 0 ;
+			doc = xmlParseFile(xmlFile);
+			res = xsltApplyStylesheet(((xslt_class*)this)->stylesheet, doc, ((xslt_class*)this)->params);
 			xsltSaveResultToString(&output, &len, res, ((xslt_class*)this)->stylesheet);
 
 			xmlFreeDoc(res);
@@ -70,7 +84,6 @@ static xmlChar * xslt_class_fast_transform(char * xml, char * xslt){
 
 		return output;
 }
-
 static void xslt_class_free(void* this){
 	xsltFreeStylesheet(((xslt_class*)this)->stylesheet);
 	free(this);
@@ -81,7 +94,9 @@ xslt_class* xslt_class_new(){
      xslt_class * out = malloc(sizeof(xslt_class));
 
      out->compile_style = xslt_class_compile_style;
+     out->compile_style_file = xslt_class_compile_style_file;
      out->transform = xslt_class_transform;
+     out->transform_file = xslt_class_transform_file;
      out->fast_transform = xslt_class_fast_transform;
      out->free = xslt_class_free;
 

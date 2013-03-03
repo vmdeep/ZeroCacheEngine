@@ -11,9 +11,12 @@
 typedef struct xslt_class{
 	void (*free)(void*);
     void (*compile_style)(void*,char *);
+    void (*compile_style_file)(void*,char*);
     xmlChar* (*transform)(void*,char*);
+    xmlChar* (*transform_file)(void*,char*);
     xmlChar* (*fast_transform)(char*,char*);
     xsltStylesheetPtr stylesheet;
+    char * params[];
 } xslt_class;
 
 xslt_class* xslt_class_new();
